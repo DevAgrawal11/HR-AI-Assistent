@@ -1,4 +1,3 @@
-
 # HR AI Assistant
 
 An AI-assisted recruitment screening application built with FastAPI, React, TypeScript, and PostgreSQL. The system helps HR users compare candidate resume profiles against confirmed job requirements, verify supporting evidence, and review screening results.
@@ -34,7 +33,7 @@ An AI-assisted recruitment screening application built with FastAPI, React, Type
 - TypeScript
 - Vite
 
-### Testing and infrastructure
+### Testing and Infrastructure
 - pytest
 - SQLite for isolated tests and synthetic evaluation
 - Docker Compose for the database environment
@@ -56,6 +55,7 @@ An AI-assisted recruitment screening application built with FastAPI, React, Type
 │   ├── seed.py
 │   ├── evaluate_screening.py
 │   ├── evaluation_report.csv
+│   ├── requirements.txt
 │   └── tests/
 ├── frontend/
 │   ├── src/
@@ -63,45 +63,82 @@ An AI-assisted recruitment screening application built with FastAPI, React, Type
 │   └── vite.config.ts
 ├── docker-compose.yml
 ├── README.md
-└── TECHNICAL_DECISIONS.md
+├── TECHNICAL_DECISIONS.md
+└── .gitignore
 ```
 
 ## Prerequisites
 
 Install the following before running the application:
 
-- Python and a virtual environment
+- Python 3.13 or a compatible Python version
 - Node.js and npm
-- PostgreSQL, or Docker with Docker Compose
+- Docker and Docker Compose
 - A Gemini API key for live AI functionality
 
-Use the Python and Node.js versions configured for your development environment.
+The application uses PostgreSQL for persistent database storage. Docker Compose starts the PostgreSQL service; the backend and frontend run separately using their respective commands below.
 
 ## Configuration
 
-Create or update the root `.env` file with the required environment variables.
+Create a root `.env` file in the project directory. Do not commit this file to Git.
 
-Example:
+Configure the following variables:
 
 ```dotenv
 DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/hr_ai
 JWT_SECRET=replace_with_a_strong_random_secret
 GEMINI_API_KEY=your_gemini_api_key
+POSTGRES_PASSWORD=your_database_password
 ```
 
-Use the exact Gemini variable name expected by `backend/gemini_service.py`. Never commit real credentials or production secrets to source control.
+Use matching database credentials in `DATABASE_URL` and `POSTGRES_PASSWORD`. The database name and username must also match the Docker Compose configuration, unless you explicitly override its defaults.
+
+Generate a strong, random JWT secret for your environment. Never commit actual credentials, API keys, or production secrets to source control.
+
+The backend reads its environment configuration from the root `.env` file. Check `backend/database.py`, `backend/auth.py`, and `backend/gemini_service.py` if you need to confirm the variables used by the application.
+
+## Database Setup
+
+From the project root, validate the Docker Compose configuration:
+
+```bash
+docker compose config --quiet
+```
+
+If validation succeeds, start PostgreSQL:
+
+```bash
+docker compose up -d postgres
+```
+
+Check the database container:
+
+```bash
+docker compose ps
+```
+
+The configured PostgreSQL database is exposed on port `5432`.
+
+Ensure the database credentials in `.env` match the database configuration. If you are using an existing PostgreSQL data volume, changing `POSTGRES_PASSWORD` in the environment does not automatically change the password of an already initialized database.
+
+**Warning:** Do not remove the PostgreSQL volume to resolve credential issues unless you deliberately intend to delete the stored database data.
 
 ## Running the Backend
 
-From the project root:
+From the project root, create and activate a Python virtual environment:
 
 ```bash
+python -m venv .venv
 source .venv/bin/activate
 ```
 
-Install the backend dependencies using your project's dependency manifest, if one is configured.
+Install the backend dependencies:
 
-Then run:
+```bash
+python -m pip install -r backend/requirements.txt
+```
+
+Start the backend from the project root:
 
 ```bash
 cd backend
@@ -111,7 +148,7 @@ uvicorn main:app --reload --port 8000
 The API health endpoint is:
 
 ```text
-GET http://localhost:8000/api/health
+http://localhost:8000/api/health
 ```
 
 API documentation is available at:
@@ -119,6 +156,8 @@ API documentation is available at:
 ```text
 http://localhost:8000/docs
 ```
+
+Keep the backend terminal running while using the application.
 
 ## Running the Frontend
 
@@ -130,31 +169,24 @@ npm install
 npm run dev
 ```
 
-Use the local URL printed by Vite.
+Open the local URL printed by Vite, usually:
 
-For a production build:
+```text
+http://localhost:5173/
+```
+
+Keep the frontend terminal running while using the application.
+
+### Production Build
+
+To compile the frontend for production:
 
 ```bash
+cd frontend
 npm run build
 ```
 
-## Database
-
-A Docker Compose configuration is provided in `docker-compose.yml`.
-
-Inspect the configured services before starting them:
-
-```bash
-docker compose config
-```
-
-Start the configured services with:
-
-```bash
-docker compose up -d
-```
-
-The backend's database configuration must match the database host, port, name, and credentials in the Compose configuration.
+The generated production files are placed in `frontend/dist/`. This build step does not itself deploy the frontend.
 
 ## Authentication and Authorization
 
@@ -173,7 +205,7 @@ The application distinguishes HR and Viewer permissions. Sensitive operations, s
 7. Weighted scores and a preliminary verdict are calculated.
 8. HR reviews the results and makes the hiring decision.
 
-### Screening statuses
+### Screening Statuses
 
 The current screening workflow uses these statuses:
 
@@ -192,19 +224,21 @@ Scores are heuristic evidence scores, not probabilities of job success. Screenin
 
 ## Automated Tests
 
-Run the backend test suite from the project root:
+Run the backend test suite from the project root with the backend directory included in Python's module search path:
 
 ```bash
-PYTHONPATH=backend python -m pytest backend/tests -v
+source .venv/bin/activate
+PYTHONPATH=backend python -m pytest backend/tests -q
 ```
 
-The current recorded result is **26 passing tests**. Run the command again after code changes to confirm the current result.
+The current verified result is **26 passing tests**. Run the command again after code changes to confirm the current result.
 
 ## Synthetic Screening Evaluation
 
-Run:
+Run the evaluation script from the project root:
 
 ```bash
+source .venv/bin/activate
 PYTHONPATH=backend python backend/evaluate_screening.py
 ```
 
@@ -229,6 +263,7 @@ Before production deployment:
 - Restrict resume-file access and validate uploads.
 - Protect personal information and define data-retention policies.
 - Keep API keys and database credentials out of logs and client-side code.
+- Configure persistent storage and database backups.
 - Test the deployment and database configuration in a clean environment.
 
 ## Current Limitations
@@ -236,6 +271,7 @@ Before production deployment:
 - AI assessments depend on the external Gemini service when live screening is used.
 - Synthetic evaluation uses mocked assessments and does not establish real-world model accuracy.
 - Screening scores are heuristic and should not be interpreted as calibrated probabilities.
+- Docker Compose currently configures PostgreSQL only; the backend and frontend are started separately.
 - Production deployment and HTTPS configuration must be verified separately.
 
 ## License
