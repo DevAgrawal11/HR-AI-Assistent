@@ -154,7 +154,8 @@ const [requirementsResponse, jobResponse] = await Promise.all([
   const addRequirement = async () => {
   try {
     const response = await apiFetch(
-      '`/api/v1/jobs/${id}/requirements`',
+      `/api/v1/jobs/${id}/requirements`,
+
       {
         method: 'POST',
         credentials: 'include',
@@ -382,7 +383,7 @@ const [requirementsResponse, jobResponse] = await Promise.all([
             onClick={async () => {
   try {
     const response = await apiFetch(
-      '`/api/v1/jobs/${id}/requirements`/confirm',
+      `/api/v1/jobs/${id}/requirements/confirm`,
       {
         method: 'POST',
         credentials: 'include',
