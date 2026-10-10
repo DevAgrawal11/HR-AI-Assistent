@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { apiFetch } from '../api'
 
 import {
@@ -12,6 +13,8 @@ import {
   ShieldCheck,
 
   Sparkles,
+  
+  Upload,
 
   X,
 
@@ -154,6 +157,8 @@ const STAGES = [
 ] as const
 
 export default function CandidatesPage() {
+  const navigate = useNavigate()
+  const { jobId } = useParams<{ jobId: string }>()
 
   const [userRole, setUserRole] = useState('')
 
@@ -750,11 +755,22 @@ const screenedCount = applications.filter(
 
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700">
+          <div className="flex flex-wrap items-center gap-3">
+  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700">
+    {screenedCount} of {applications.length} applications screened
+  </div>
 
-            {screenedCount} of {applications.length} applications screened
-
-          </div>
+  {isHR && (
+    <button
+      type="button"
+      onClick={() => navigate(`/jobs/${jobId || '1'}/upload`)}
+      className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+    >
+      <Upload size={17} />
+      Upload Resume
+    </button>
+  )}
+</div>
 
         </div>
 
