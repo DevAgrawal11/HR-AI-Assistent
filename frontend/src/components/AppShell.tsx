@@ -5,7 +5,6 @@ import {
   ChevronDown,
   LayoutDashboard,
   LogOut,
-  Settings,
   Sparkles,
   Users,
 } from 'lucide-react'
@@ -145,18 +144,6 @@ export default function AppShell({ children }: AppShellProps) {
             </NavLink>
           </div>
 
-          {isHR && (
-            <>
-              <p className="mb-3 mt-8 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                System
-              </p>
-
-              <NavLink to="/settings" className={navClass}>
-                <Settings size={18} />
-                Settings
-              </NavLink>
-            </>
-          )}
         </nav>
 
         <div className="shrink-0 border-t border-white/10 p-4">
