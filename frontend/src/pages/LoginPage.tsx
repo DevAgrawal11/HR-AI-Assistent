@@ -1,3 +1,4 @@
+import { apiFetch } from '../api'
 
 import { useState } from 'react'
 import type { FormEvent } from 'react'
@@ -14,7 +15,7 @@ export default function LoginPage() {
     setError('')
 
     try {
-      const response = await fetch('/api/v1/auth/login', {
+      const response = await apiFetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {

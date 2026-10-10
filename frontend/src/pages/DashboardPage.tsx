@@ -7,6 +7,7 @@ import {
   ArrowUpRight,
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
+import { apiFetch } from '../api'
 interface Job {
   id: number
   title: string
@@ -42,8 +43,8 @@ export default function DashboardPage() {
 
       try {
         const [jobsResponse, applicationsResponse] = await Promise.all([
-          fetch('/api/v1/jobs', { credentials: 'include' }),
-          fetch('/api/v1/applications', { credentials: 'include' }),
+          apiFetch('/api/v1/jobs', { credentials: 'include' }),
+          apiFetch('/api/v1/applications', { credentials: 'include' }),
         ])
 
         if (!jobsResponse.ok || !applicationsResponse.ok) {

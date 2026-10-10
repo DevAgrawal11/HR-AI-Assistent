@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { apiFetch } from '../api'
 
 import {
 
@@ -198,7 +199,7 @@ export default function CandidatesPage() {
     let active = true
     const loadCurrentUser = async () => {
       try {
-        const response = await fetch('/api/v1/auth/me', { credentials: 'include' })
+        const response = await apiFetch('/api/v1/auth/me', { credentials: 'include' })
         if (!response.ok) { if (active) setUserRole(''); return }
         const user: { role?: string } = await response.json()
         if (active) setUserRole(user.role ?? '')
@@ -217,7 +218,7 @@ export default function CandidatesPage() {
 
       try {
 
-        const response = await fetch('/api/v1/applications', {
+        const response = await apiFetch('/api/v1/applications', {
 
           credentials: 'include',
 
@@ -287,7 +288,7 @@ export default function CandidatesPage() {
 
     try {
 
-      const response = await fetch(
+      const response = await apiFetch(
 
         `/api/v1/applications/${selected.application_id}/history`,
 
@@ -365,7 +366,7 @@ export default function CandidatesPage() {
 
     try {
 
-      const response = await fetch(
+      const response = await apiFetch(
 
         `/api/v1/applications/${application.application_id}/screening-results`,
 
@@ -423,7 +424,7 @@ export default function CandidatesPage() {
 
     try {
 
-      const response = await fetch(
+      const response = await apiFetch(
 
         `/api/v1/applications/${application.application_id}/screen`,
 
@@ -449,7 +450,7 @@ export default function CandidatesPage() {
 
 
 
-      const screeningResponse = await fetch(
+      const screeningResponse = await apiFetch(
 
         `/api/v1/applications/${application.application_id}/screening-results`,
 
@@ -469,7 +470,7 @@ export default function CandidatesPage() {
 
 
 
-      const applicationsResponse = await fetch('/api/v1/applications', {
+      const applicationsResponse = await apiFetch('/api/v1/applications', {
 
         credentials: 'include',
 
@@ -551,7 +552,7 @@ export default function CandidatesPage() {
 
     try {
 
-      const response = await fetch(
+      const response = await apiFetch(
 
         `/api/v1/applications/${application.application_id}/stage`,
 

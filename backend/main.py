@@ -1,5 +1,6 @@
 import os
 import shutil
+from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 from hashlib import sha256
 from resume_parser import extract_text
@@ -51,6 +52,16 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="HR AI Assistant API",
     version="1.0.0",
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "https://hr-ai-assistant-frontend.onrender.com",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 UPLOAD_DIR = Path(__file__).resolve().parent / "uploads" / "resumes"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)

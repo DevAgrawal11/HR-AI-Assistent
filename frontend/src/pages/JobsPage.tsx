@@ -8,6 +8,7 @@ import {
   Search,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { apiFetch } from '../api'
 
 interface Job {
   id: number
@@ -53,8 +54,8 @@ export default function JobsPage() {
 
     try {
       const [jobsResponse, applicationsResponse] = await Promise.all([
-        fetch('/api/v1/jobs', { credentials: 'include' }),
-        fetch('/api/v1/applications', { credentials: 'include' }),
+        apiFetch('/api/v1/jobs', { credentials: 'include' }),
+        apiFetch('/api/v1/applications', { credentials: 'include' }),
       ])
 
       if (!jobsResponse.ok) {
@@ -97,7 +98,7 @@ export default function JobsPage() {
 
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch('/api/v1/auth/me', {
+        const response = await apiFetch('/api/v1/auth/me', {
           credentials: 'include',
         })
 
@@ -155,7 +156,7 @@ export default function JobsPage() {
     setSuccess('')
 
     try {
-      const response = await fetch('/api/v1/jobs', {
+      const response = await apiFetch('/api/v1/jobs', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -211,7 +212,7 @@ export default function JobsPage() {
     setSuccess('')
 
     try {
-      const response = await fetch(`/api/v1/jobs/${jobId}/status`, {
+      const response = await apiFetch(`/api/v1/jobs/${jobId}/status`, {
         method: 'PATCH',
         credentials: 'include',
         headers: {
@@ -254,7 +255,7 @@ export default function JobsPage() {
     setSuccess('')
 
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `/api/v1/jobs/${job.id}/requirements/confirm`,
         {
           method: 'POST',
@@ -317,7 +318,7 @@ export default function JobsPage() {
     setSuccess('')
 
     try {
-      const response = await fetch(`/api/v1/jobs/${editingJobId}`, {
+      const response = await apiFetch(`/api/v1/jobs/${editingJobId}`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -367,7 +368,7 @@ export default function JobsPage() {
     setSuccess('')
 
     try {
-      const response = await fetch(`/api/v1/jobs/${jobId}`, {
+      const response = await apiFetch(`/api/v1/jobs/${jobId}`, {
         method: 'DELETE',
         credentials: 'include',
       })

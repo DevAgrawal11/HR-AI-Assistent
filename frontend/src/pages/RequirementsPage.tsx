@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { apiFetch } from '../api'
 
 import {
   ArrowLeft,
@@ -36,10 +37,10 @@ useEffect(() => {
     try {
 
 const [requirementsResponse, jobResponse] = await Promise.all([
-  fetch(`/api/v1/jobs/${id}/requirements`, {
+  apiFetch(`/api/v1/jobs/${id}/requirements`, {
     credentials: 'include',
   }),
-  fetch(`/api/v1/jobs/${id}`, {
+  apiFetch(`/api/v1/jobs/${id}`, {
     credentials: 'include',
   }),
 ])
@@ -100,7 +101,7 @@ const [requirementsResponse, jobResponse] = await Promise.all([
   }
 
   try {
-    const response = await fetch(
+    const response = await apiFetch(
       `/api/v1/requirements/${id}`,
       {
         method: 'PUT',
@@ -128,7 +129,7 @@ const [requirementsResponse, jobResponse] = await Promise.all([
 
  const removeRequirement = async (id: number) => {
   try {
-    const response = await fetch(
+    const response = await apiFetch(
       `/api/v1/requirements/${id}`,
       {
         method: 'DELETE',
@@ -152,7 +153,7 @@ const [requirementsResponse, jobResponse] = await Promise.all([
 
   const addRequirement = async () => {
   try {
-    const response = await fetch(
+    const response = await apiFetch(
       '`/api/v1/jobs/${id}/requirements`',
       {
         method: 'POST',
@@ -380,7 +381,7 @@ const [requirementsResponse, jobResponse] = await Promise.all([
           <button
             onClick={async () => {
   try {
-    const response = await fetch(
+    const response = await apiFetch(
       '`/api/v1/jobs/${id}/requirements`/confirm',
       {
         method: 'POST',

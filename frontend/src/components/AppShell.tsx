@@ -10,6 +10,7 @@ import {
   Users,
 } from 'lucide-react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { apiFetch } from '../api'
 
 interface AppShellProps {
   children: ReactNode
@@ -32,7 +33,7 @@ export default function AppShell({ children }: AppShellProps) {
 
     async function loadCurrentUser() {
       try {
-        const response = await fetch('/api/v1/auth/me', {
+        const response = await apiFetch('/api/v1/auth/me', {
           credentials: 'include',
         })
 
@@ -95,7 +96,7 @@ export default function AppShell({ children }: AppShellProps) {
 
   async function handleLogout() {
     try {
-      await fetch('/api/v1/auth/logout', {
+      await apiFetch('/api/v1/auth/logout', {
         method: 'POST',
         credentials: 'include',
       })
