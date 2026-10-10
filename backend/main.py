@@ -1,3 +1,4 @@
+import os
 import shutil
 from pathlib import Path
 from hashlib import sha256
@@ -207,7 +208,7 @@ def login(
         key="access_token",
         value=token,
         httponly=True,
-        secure=False,
+        secure=os.getenv("ENVIRONMENT") == "production",
         samesite="lax",
         max_age=8 * 60 * 60,
     )
