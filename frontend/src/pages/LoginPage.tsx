@@ -15,7 +15,7 @@ export default function LoginPage() {
     setError('')
 
     try {
-      const response = await apiFetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/login`, {
+      const response = await apiFetch('/api/v1/auth/login', {
         method: 'POST',
         credentials: 'include',
         headers: {
