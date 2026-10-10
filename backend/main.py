@@ -220,7 +220,7 @@ def login(
         value=token,
         httponly=True,
         secure=os.getenv("ENVIRONMENT") == "production",
-        samesite="lax",
+        samesite="none",
         max_age=8 * 60 * 60,
     )
     return user
