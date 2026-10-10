@@ -73,11 +73,10 @@ def cleanup_upload_test(engine, db):
     Base.metadata.drop_all(bind=engine)
     engine.dispose()
 
-
 def upload_file(client, job_id, filename, content, content_type):
     return client.post(
         f"/api/v1/jobs/{job_id}/applications",
-        params={
+        data={
             "candidate_name": "Validation Candidate",
             "candidate_email": "validation@example.com",
         },
@@ -85,8 +84,6 @@ def upload_file(client, job_id, filename, content, content_type):
             "resume": (filename, content, content_type),
         },
     )
-
-
 def test_rejects_unsupported_file_extension(tmp_path, monkeypatch):
     engine, db, job_id = setup_upload_test()
 
@@ -162,6 +159,7 @@ def test_rejects_file_larger_than_5_mb(tmp_path, monkeypatch):
 
     try:
         monkeypatch.setattr(main, "UPLOAD_DIR", tmp_path)
+    
 
         oversized_content = b"%PDF-" + b"A" * (5 * 1024 * 1024)
 

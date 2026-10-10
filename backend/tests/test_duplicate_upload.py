@@ -107,7 +107,7 @@ def test_duplicate_resume_is_rejected_without_creating_application(
         with TestClient(main.app) as client:
             response = client.post(
                 f"/api/v1/jobs/{job.id}/applications",
-                params={
+                data={
                     "candidate_name": "Duplicate Candidate",
                     "candidate_email": "duplicate@example.com",
                 },
@@ -187,7 +187,7 @@ def test_different_resume_content_is_not_flagged_as_duplicate(
         with TestClient(main.app) as client:
             response = client.post(
                 f"/api/v1/jobs/{job.id}/applications",
-                params={
+                data={
                     "candidate_name": "New Candidate",
                     "candidate_email": "new@example.com",
                 },

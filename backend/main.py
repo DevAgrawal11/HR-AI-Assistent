@@ -12,6 +12,7 @@ from fastapi import (
     Depends,
     FastAPI,
     File,
+    Form,
     HTTPException,
     Response,
     UploadFile,
@@ -553,8 +554,8 @@ def confirm_requirements(
 def upload_resume(
     background_tasks: BackgroundTasks,
     job_id: int,
-    candidate_name: str,
-    candidate_email: str,
+    candidate_name: str = Form(...),
+    candidate_email: str = Form(...),
     resume: UploadFile = File(...),
     token_data: dict = Depends(get_current_user_from_cookie),
     db: Session = Depends(get_db),
